@@ -1,0 +1,10 @@
+spring:
+  session: 86400
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://124.221.88.144:3306/user_center
+    username: dogyupi
+    password: yupi666
+
+server:
+  address: 0.0.0.0
