@@ -7,7 +7,11 @@ import com.example.usercenter.common.ErrorCode;
 import com.example.usercenter.common.ResultUtils;
 import com.example.usercenter.exception.BusinessException;
 import com.example.usercenter.model.domain.Team;
+import com.example.usercenter.model.domain.User;
 import com.example.usercenter.model.domain.dto.TeamQuery;
+import com.example.usercenter.model.domain.request.team.TeamAddRequest;
+import com.example.usercenter.model.domain.request.team.TeamUpdateRequest;
+import com.example.usercenter.model.domain.vo.TeamUserVo;
 import com.example.usercenter.service.TeamService;
 import com.example.usercenter.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +20,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 
@@ -35,23 +40,24 @@ public class TeamController {
     private TeamService teamService;
 
     @PostMapping("/add")
-    public BaseResponse<Long> addTeam (@RequestBody Team team) {
-        if(team == null){
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+    public BaseResponse<Long> addTeam (@RequestBody TeamAddRequest teamAddRequest, HttpServletRequest request) {
+        if(teamAddRequest == null){
+            throw new BusinessException(ErrorCode.NULL_ERROR);
         }
-        boolean save = teamService.save(team);
-        if(!save){
-            throw new BusinessException(ErrorCode.SYSTEM_ERROR,"插入失败");
-        }
-        return ResultUtils.success(team.getId());
+        User loginUser = userService.getLoginUser(request);
+        Team team = new Team();
+        BeanUtils.copyProperties(teamAddRequest,team);
+        long teamId = teamService.addTeam(team,loginUser);
+        return ResultUtils.success(teamId);
     }
 
     @PostMapping("/delete")
-    public BaseResponse<Boolean> deleteTeam(@RequestBody long id){
+    public BaseResponse<Boolean> deleteTeam(@RequestBody long id,HttpServletRequest request){
         if(id <= 0){
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+            throw new BusinessException(ErrorCode.NULL_ERROR);
         }
-        boolean result = teamService.removeById(id);
+        User loginUser = userService.getLoginUser(request);
+        boolean result = teamService.deleteTeam(id,loginUser);
         if(!result){
             throw new BusinessException(ErrorCode.SYSTEM_ERROR,"删除失败");
         }
@@ -59,13 +65,14 @@ public class TeamController {
     }
 
     @PostMapping("/update")
-    public BaseResponse<Boolean> updateTeam(@RequestBody Team team){
+    public BaseResponse<Boolean> updateTeam(TeamUpdateRequest team, HttpServletRequest request){
         if(team == null){
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        boolean result = teamService.updateById(team);
+        User loginUser = userService.getLoginUser(request);
+        boolean result = teamService.updateTeam(team,loginUser);
         if(!result){
-            throw new BusinessException(ErrorCode.SYSTEM_ERROR,"更新失败");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR,"更新队伍失败");
         }
         return ResultUtils.success(true);
     }
@@ -83,14 +90,12 @@ public class TeamController {
     }
 
     @GetMapping("/list")
-    public BaseResponse<List<Team>> listTeams(@RequestBody TeamQuery teamQuery){
+    public BaseResponse<List<TeamUserVo>> listTeams( TeamQuery teamQuery,HttpServletRequest request){
         if(teamQuery == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        Team team = new Team();
-        BeanUtils.copyProperties(team,teamQuery);
-        QueryWrapper<Team> queryWrapper = new QueryWrapper<>(team);
-        List<Team> teamList = teamService.list(queryWrapper);
+        boolean isAdmin = userService.isAdmin(request);
+        List<TeamUserVo> teamList = teamService.listTeams(teamQuery,isAdmin);
         return ResultUtils.success(teamList);
     }
 

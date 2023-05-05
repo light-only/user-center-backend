@@ -288,7 +288,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
      * @param loginUser
      * @return
      */
-    private boolean isAdmin(User loginUser) {
+    @Override
+    public boolean isAdmin(User loginUser) {
         return loginUser != null && loginUser.getUserRole() == ADMIN_ROLE;
     }
 

@@ -1,17 +1,13 @@
-package com.example.usercenter.model.domain.dto;
+package com.example.usercenter.model.domain.request.team;
 
-import com.example.usercenter.common.PageRequest;
 import lombok.Data;
 
-import java.util.List;
+import java.io.Serializable;
+import java.util.Date;
 
 @Data
-public class TeamQuery extends PageRequest {
-    /**
-     * id
-     */
-    private Long id;
-
+public class TeamAddRequest implements Serializable {
+    private static final long serialVersionUID = -6079774904618797160L;
     /**
      * 队伍名称
      */
@@ -28,6 +24,11 @@ public class TeamQuery extends PageRequest {
     private Integer maxNum;
 
     /**
+     * 过期时间
+     */
+    private Date expireTime;
+
+    /**
      * 用户id
      */
     private Long userId;
@@ -37,14 +38,8 @@ public class TeamQuery extends PageRequest {
      */
     private Integer status;
 
-
     /**
-     * id列表
+     * 密码
      */
-    private List<Long> idList;
-
-    /**
-     * 搜索关键词（同时对队伍名称和描述搜索）
-     */
-    private String searchText;
+    private String password;
 }
