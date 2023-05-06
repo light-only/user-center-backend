@@ -221,7 +221,7 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
             throw new BusinessException(ErrorCode.NULL_ERROR,"队伍不存在");
         }
         //只有队伍的创建者或者管理员可以修改
-        if(oldTeam.getUserId() != loginUser.getId() || !userService.isAdmin(loginUser)){
+        if(oldTeam.getUserId() != loginUser.getId() && !userService.isAdmin(loginUser)){
             throw new BusinessException(ErrorCode.NO_AUTH);
         }
         //队伍如果是加密状态，必须要设置密码

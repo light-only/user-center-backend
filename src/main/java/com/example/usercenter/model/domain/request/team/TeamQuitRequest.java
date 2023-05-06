@@ -1,5 +1,7 @@
 package com.example.usercenter.model.domain.request.team;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -11,5 +13,6 @@ public class TeamQuitRequest implements Serializable {
     /**
      * 队伍id
      */
+    @JsonSerialize(using= ToStringSerializer.class)
     private long teamId;
 }

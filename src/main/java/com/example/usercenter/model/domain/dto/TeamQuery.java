@@ -1,6 +1,8 @@
 package com.example.usercenter.model.domain.dto;
 
 import com.example.usercenter.common.PageRequest;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 import java.util.List;
@@ -10,6 +12,8 @@ public class TeamQuery extends PageRequest {
     /**
      * id
      */
+
+    @JsonSerialize(using= ToStringSerializer.class)
     private Long id;
 
     /**
@@ -30,6 +34,8 @@ public class TeamQuery extends PageRequest {
     /**
      * 用户id
      */
+
+    @JsonSerialize(using= ToStringSerializer.class)
     private Long userId;
 
     /**
@@ -41,6 +47,7 @@ public class TeamQuery extends PageRequest {
     /**
      * id列表
      */
+    @JsonSerialize(using= ToStringSerializer.class)
     private List<Long> idList;
 
     /**
