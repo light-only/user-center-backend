@@ -29,7 +29,7 @@ class InsertUsersTest {
     public void doInsertUser() {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        final int INSERT_MUN = 1000;
+        final int INSERT_MUN = 100000;
         List<User> userList = new ArrayList<>();
         for (int i = 0; i < INSERT_MUN; i++) {
             User user = new User();
@@ -47,7 +47,7 @@ class InsertUsersTest {
             user.setTags("[]");
             userList.add(user);
         }
-        userService.saveBatch(userList,1000);
+        userService.saveBatch(userList,100000);
         stopWatch.stop();
         System.out.println(stopWatch.getTotalTimeMillis());
     }

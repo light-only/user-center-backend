@@ -4,9 +4,11 @@ import com.example.usercenter.common.PageRequest;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class TeamQuery extends PageRequest {
     /**
@@ -47,7 +49,6 @@ public class TeamQuery extends PageRequest {
     /**
      * id列表
      */
-    @JsonSerialize(using= ToStringSerializer.class)
     private List<Long> idList;
 
     /**

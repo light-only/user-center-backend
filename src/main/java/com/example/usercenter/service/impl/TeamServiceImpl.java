@@ -142,7 +142,7 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
             }
             List<Long> idList = teamQuery.getIdList();
             if(CollectionUtils.isNotEmpty(idList)){
-                queryWrapper.eq("id",idList);
+                queryWrapper.in("id",idList);
             }
 
             String searchText = teamQuery.getSearchText();
@@ -301,7 +301,7 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
             throw new BusinessException(ErrorCode.NULL_ERROR);
         }
         Long teamId = teamQuitRequest.getTeamId();
-        if(teamId == null || teamId<0){
+        if(teamId == null || teamId <= 0){
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         Team team = this.getById(teamId);
