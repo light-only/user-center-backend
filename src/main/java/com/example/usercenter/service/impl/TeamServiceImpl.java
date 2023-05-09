@@ -259,7 +259,7 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
        }
        String password = teamJoinRequest.getPassword();
        if(TeamStatusEnum.SECRET.equals(statusEnum)){
-           if(StringUtils.isBlank(password) || password!=team.getPassword()){
+           if(StringUtils.isBlank(password) || !password.equals(team.getPassword())){
                throw new BusinessException(ErrorCode.PARAMS_ERROR,"队伍密码错误");
            }
        }

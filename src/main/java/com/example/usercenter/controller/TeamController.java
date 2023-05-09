@@ -137,13 +137,16 @@ public class TeamController {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         boolean isAdmin = userService.isAdmin(request);
+        User loginUser = userService.getLoginUser(request);
+        if(loginUser == null) {
+            throw new BusinessException(ErrorCode.NULL_ERROR);
+        }
         //查询队伍列表
         List<TeamUserVo> teamList = teamService.listTeams(teamQuery,isAdmin);
         final List<Long> teamIdList = teamList.stream().map(TeamUserVo::getId).collect(Collectors.toList());
         //判断当前用户是否已经加入列表
         QueryWrapper<UserTeam> userTeamQueryWrapper = new QueryWrapper<>();
         try{
-            User loginUser = userService.getLoginUser(request);
             userTeamQueryWrapper.eq("userId",loginUser.getId());
             userTeamQueryWrapper.in("teamId",teamIdList);
             List<UserTeam> userTeamList = userTeamService.list(userTeamQueryWrapper);
@@ -186,6 +189,9 @@ public class TeamController {
         ArrayList<Long> idList = new ArrayList<>(listMap.keySet());
         teamQuery.setIdList(idList);
         List<TeamUserVo> teamList = teamService.listTeams(teamQuery,true);
+        teamList.forEach(team->{
+            team.setHasJoin(true);
+        });
         return ResultUtils.success(teamList);
     }
 }
